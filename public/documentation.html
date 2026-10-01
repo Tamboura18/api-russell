@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation API</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Documentation de l'API</h1>
+
+        <nav>
+            <a href="index.html">Accueil</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="catways.html">Catways</a>
+            <a href="reservations.html">Réservations</a>
+            <a href="user.html">Utilisateurs</a>
+        </nav>
+    </header>
+    
+<section class="card">
+    <h2>Authentification</h2>
+
+    <p><strong>POST /login</strong> — Connexion</p>
+    <p><strong>GET /logout</strong> — Déconnexion</p>
+</section>
+
+<section class="card">
+
+    <h2>Catways</h2>
+
+    <p><strong>GET /catways</strong> — Liste des catways</p>
+    <p><strong>GET /catways/:id</strong> — Détails d'un catway</p>
+    <p><strong>POST /catways</strong> — Créer un catway</p>
+    <p><strong>PUT /catways/:id</strong> — Modifier l'état</p>
+    <p><strong>DELETE /catways/:id</strong> — Supprimer</p>
+
+</section>
+
+<section class="card">
+
+    <h2>Réservations</h2>
+
+    <p><strong>GET /catways/:id/reservations</strong></p>
+    <p><strong>GET /catways/:id/reservations/:idReservation</strong></p>
+    <p><strong>POST /catways/:id/reservations</strong></p>
+    <p><strong>PUT /catways/:id/reservations/:idReservation</strong></p>
+    <p><strong>DELETE /catways/:id/reservations/:idReservation</strong></p>
+
+</section>
+
+<section class="card">
+
+    <h2>Utilisateurs</h2>
+
+    <p><strong>GET /users</strong></p>
+    <p><strong>GET /users/:email</strong></p>
+    <p><strong>POST /users</strong></p>
+    <p><strong>PUT /users/:email</strong></p>
+    <p><strong>DELETE /users/:email</strong></p>
+
+</section>
+</body>
+</html>
