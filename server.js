@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const connectDatabase = require("./config/database");
 require("dotenv").config();
 const catwayRoutes = require ("./routes/catwayRoutes");
 const reservationRoutes = require("./routes/reservationRoutes");
@@ -15,6 +15,7 @@ app.use(express.static("public"));
 app.use("/catways", catwayRoutes);
 app.use("/", reservationRoutes);
 app.use("/user", userRoutes);
+app.use("/users", userRoutes);
 app.use("/", authRoutes);
 
 app.get("/", (req, res) => {
@@ -23,17 +24,11 @@ app.get("/", (req, res) => {
     });
 });
 
-mongoose 
-    .connect(process.env.MONGO_URI)
-     .then(() => {
-         console.log("MongoDB connecté");
-
-         app.listen(PORT, () => {
-            console.log("serveur démarrée sur http://localhost:3000");
+connectDatabase() 
+.then(() => { 
+    app.listen(PORT, () => { 
+        console.log(`Serveur démarré sur http://localhost:${PORT}`); }); 
+            
+        }) .catch((error) => { 
+            console.error("Impossible de démarrer le serveur :", error); 
         });
-})
-.catch((error) => {
-    console.error("Errreur de connexion à MongoDB :",
-        error
-    );
-})

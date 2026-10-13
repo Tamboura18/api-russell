@@ -1,21 +1,15 @@
-const validateCatway = (req, res, next) => { 
-    const { catwayNumber, catwayType, catwayState } = req.body || {};
-
-    console.log(req.body);
-
+const validateCatway = (req, res, next) => {
+const { catwayNumber, catwayType, catwayState } = req.body || {};
 if (
     catwayNumber === undefined ||
-    !catwayType ||
-    !catwayState
+    catwayNumber === null ||
+    String(catwayNumber).trim() === "" ||
+    !["long", "short"].includes(catwayType) ||
+    typeof catwayState !== "string" ||
+    catwayState.trim() === ""
 ) {
     return res.status(400).json({
-        message: "Tous les champs du catway sont obligatoires"
-    });
-}
-
-if (!["long", "short"].includes(catwayType)) {
-    return res.status(400).json({
-        message: "Le type doit être long ou short"
+        message: "Numéro, type et état du catway sont obligatoires. Le type doit être long ou short."
     });
 }
 

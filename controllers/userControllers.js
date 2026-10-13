@@ -1,112 +1,112 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
+const userService = require("../services/userService");
+/**
+*Récupère tous les utilisateurs sans leurs mots de passe.
+*@async
+*@param {Object} req - La requête HTTP Express.
+*@param {Object} res - La réponse HTTP Express.
+*@returns {Promise<void>} La liste des utilisateurs au format JSON. */ 
 
-// Récupérer tous les utilisateurs 
 const getAllUsers = async (req, res) => { 
     try { 
-        const users = await User.find().select("-password");
+        const users = await userService.getAllUsers(); res.json(users); 
+    } catch (error) { res.status(500).json({
+         message: "Erreur serveur" }); 
+        } 
+    };
+/**
+*Recherche un utilisateur à partir de son adresse email.
+*@async
+*@param {Object} req - La requête contenant l'email dans l'URL.
+*@param {Object} res - La réponse HTTP Express.
+*@returns {Promise<void>} L'utilisateur trouvé ou une erreur HTTP. */
 
-    res.json(users);
-} catch (error) {
-    res.status(500).json({
-        message: "Erreur serveur"
-    });
-}
-};
-// Récupérer un utilisateur 
-const getUserByEmail = async (req, res) => { 
+const getUserByEmail = async (req, res) => {
     try { 
-        const user = await User.findOne({ 
-            email: req.params.email }).select("-password");
+        const user = await userService.getUserByEmail(req.params.email);
 
-    if (!user) {
-        return res.status(404).json({
-            message: "Utilisateur introuvable"
-        });
-    }
+ if (!user) {
+     return res.status(404).json({
+         message: "Utilisateur introuvable"
+     });
+ }
 
-    res.json(user);
-} catch (error) {
-    res.status(500).json({
-        message: "Erreur serveur"
-    });
-}
+ res.json(user);
+} catch (error) { res.status(500).json({ 
+    message: "Erreur serveur" }); 
+} 
 };
-// Créer un utilisateur 
+/**
+*Crée un utilisateur à partir des données reçues.
+*@async
+*@param {Object} req - La requête contenant les informations du nouvel utilisateur.
+*@param {Object} res - La réponse HTTP Express.
+*@returns {Promise<void>} Les informations publiques de l'utilisateur créé. */ 
+
 const createUser = async (req, res) => { 
     try { 
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
+        if (!req.body.password) { 
+            return res.status(400).json({ 
+                message: "Le mot de passe est obligatoire" });
+            }
 
-        const user = new User({
-            ...req.body,
-            password: hashedPassword
-        });
+ const user = await userService.createUser(req.body);
 
-        const newUser = await user.save();
-
-    res.status(201).json({
-        username: newUser.username,
-        email: newUser.email
-    });
-} catch (error) {
-    console.error(error);
-
-    res.status(400).json({
-        message: "Erreur lors de la création",
-        error: error.message
-    });
-}
+ res.status(201).json({
+     username: user.username,
+     email: user.email
+ });
+} catch (error) { console.error("Erreur création utilisateur :", error); 
+    res.status(400).json({ message: "Erreur lors de la création" }); 
+} 
 };
-// Modifier un utilisateur 
+
+/**
+*Modifie les informations d'un utilisateur identifié par son email.
+*@async
+*@param {Object} req - La requête contenant l'email et les données à modifier.
+*@param {Object} res - La réponse HTTP Express.
+*@returns {Promise<void>} L'utilisateur modifié ou une erreur HTTP. */ 
 const updateUser = async (req, res) => { 
     try { 
-        const { username, password } = req.body;
+        const user = await userService.updateUser( 
+            req.params.email, req.body );
 
-        const updates = {
-            username
-        };
-        if (password) {
-            updates.password = await bcrypt.hash(password, 10);
-        }
-        const user = await User.findOneAndUpdate( { 
-            email: req.params.email }, 
-            updates,
-            { new: true }
-        ).select("-password");
-           
-    if (!user) {
-        return res.status(404).json({
-            message: "Utilisateur introuvable"
-        });
-    }
+ if (!user) {
+     return res.status(404).json({
+         message: "Utilisateur introuvable"
+     });
+ }
 
-    res.json(user);
-} catch (error) {
-    res.status(400).json({
-        message: "Erreur lors de la modification"
-    });
-}
+ res.json(user);
+} catch (error) { res.status(400).json({ 
+    message: "Erreur lors de la modification" }); 
+} 
 };
-// Supprimer un utilisateur 
+
+/**
+*Supprime un utilisateur identifié par son email.
+*@async
+*@param {Object} req - La requête contenant l'email de l'utilisateur.
+*@param {Object} res - La réponse HTTP Express.
+*@returns {Promise<void>} Un message de confirmation ou une erreur HTTP. */
+
 const deleteUser = async (req, res) => { 
     try { 
-        const user = await User.findOneAndDelete({ 
-            email: req.params.email 
-        });
-        
-    if (!user) {
-        return res.status(404).json({
-            message: "Utilisateur introuvable"
-        });
-    }
+        const user = await userService.deleteUser(req.params.email);
 
-    res.json({
-        message: "Utilisateur supprimé"
-    });
+ if (!user) {
+     return res.status(404).json({
+         message: "Utilisateur introuvable"
+     });
+ }
+
+ res.json({
+     message: "Utilisateur supprimé"
+ });
 } catch (error) {
-    res.status(500).json({
-        message: "Erreur serveur"
-    });
-}
+     res.status(500).json({ 
+        message: "Erreur serveur" }); 
+    } 
 };
+
 module.exports = { getAllUsers, getUserByEmail, createUser, updateUser, deleteUser };

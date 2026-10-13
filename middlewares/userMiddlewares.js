@@ -1,9 +1,21 @@
 const validateUser = (req, res, next) => { 
-    const { username, email, password } = req.body;
+    const { username, email, password } = req.body || {};
     
-if (!username || !email || !password) {
+    if (
+    typeof username !== "string" || !username.trim() ||
+    typeof email !== "string"|| !email.trim() ||
+    typeof password !== "string" || !password
+) {
     return res.status(400).json({
         message: "Tous les champs sont obligatoires"
+    });
+}
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(email.trim())) {
+    return res.status(400).json({
+        message: "Adresse email invalide"
     });
 }
 

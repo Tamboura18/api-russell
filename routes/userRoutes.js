@@ -22,7 +22,7 @@ router.get("/", verifyToken, getAllUsers);
 router.get("/:email", verifyToken, getUserByEmail);
 
 // POST créer un utilisateur
-router.post("/", validateUser, createUser);
+router.post("/", verifyToken, validateUser, createUser);
 
 // PUT modifier un utilisateur
 router.put("/:email", verifyToken, validateUser, updateUser);
