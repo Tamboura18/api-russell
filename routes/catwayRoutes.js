@@ -22,7 +22,7 @@ router.get("/:id", verifyToken, getCatwayById);
 router.post("/", verifyToken, validateCatway, createCatway);
 
 // PUT modifier un catway
-router.put("/:id", verifyToken, updateCatway);
+router.put("/:id", verifyToken, validateCatway, updateCatway);
 
 // DELETE supprimer un catway
 router.delete("/:id", verifyToken, deleteCatway);

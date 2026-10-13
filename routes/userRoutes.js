@@ -9,9 +9,7 @@ const {
     deleteUser
 } = require("../controllers/userControllers");
 
-const {
-    validateUser
-} = require("../middlewares/userMiddlewares");
+const { validateUser } = require("../middlewares/userMiddlewares");
 
 const { verifyToken } = require("../middlewares/authMiddlewares")
 
@@ -22,7 +20,7 @@ router.get("/", verifyToken, getAllUsers);
 router.get("/:email", verifyToken, getUserByEmail);
 
 // POST créer un utilisateur
-router.post("/", verifyToken, validateUser, createUser);
+router.post("/", validateUser, createUser);
 
 // PUT modifier un utilisateur
 router.put("/:email", verifyToken, validateUser, updateUser);
