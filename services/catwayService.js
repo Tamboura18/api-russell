@@ -1,4 +1,4 @@
-const Catway = require("../models/catway");
+const Catway = require("../models/Catway");
 /**
 Récupère tous les catways enregistrés dans la base de données.
 *@async
