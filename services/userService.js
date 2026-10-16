@@ -46,6 +46,7 @@ const createUser = async (data) => {
 *@param {string} email - L'adresse email actuelle de l'utilisateur.
 *@param {Object} data - Les informations à modifier.
 *@returns {Promise<Object|null>} L'utilisateur modifié ou null. */ 
+
 const updateUser = async (email, data) => { 
     const updates = {};
 
